@@ -59,7 +59,7 @@ export const UserProvider = ({ children }) => {
   const handleUserSignup = useCallback(async (data) => {
     setLoading(true);
     try {
-      await axios.post("http://localhost:5001/api/auth/signup", data);
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/signup`, data);
 
       return { success: true };
     } catch (error) {
@@ -77,7 +77,7 @@ export const UserProvider = ({ children }) => {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:5001/api/auth/login",
+        `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
         data
       );
       localStorage.setItem("token", res.data.token);
@@ -103,7 +103,7 @@ export const UserProvider = ({ children }) => {
       setLoading(true);
       try {
         const res = await axios.post(
-          "http://localhost:5001/api/task/create",
+          `${import.meta.env.VITE_BACKEND_URL}/task/create`,
           taskData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -126,7 +126,7 @@ export const UserProvider = ({ children }) => {
 
   const handleFetchTask = useCallback(async () => {
     try {
-      const res = await api.get("http://localhost:5001/api/task/alltask", {
+      const res = await api.get(`${import.meta.env.VITE_BACKEND_URL}/task/alltask`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const allTasks = res.data.tasks;
@@ -141,7 +141,7 @@ export const UserProvider = ({ children }) => {
     async (taskId) => {
       try {
         const res = await api.put(
-          `http://localhost:5001/api/task/${taskId}/start`,
+          `${import.meta.env.VITE_BACKEND_URL}/task/${taskId}/start`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -161,12 +161,12 @@ export const UserProvider = ({ children }) => {
     [token, handleFetchTask]
   );
 
-  // ✅ Pause timer
+  // Pause timer
   const handlePauseTask = useCallback(
     async (taskId) => {
       try {
         const res = await api.put(
-          `http://localhost:5001/api/task/${taskId}/pause`,
+          `${import.meta.env.VITE_BACKEND_URL}/task/${taskId}/pause`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -186,12 +186,12 @@ export const UserProvider = ({ children }) => {
     [token, handleFetchTask]
   );
 
-  // ✅ Reset timer
+  // Reset timer
   const handleResetTask = useCallback(
     async (taskId) => {
       try {
         const res = await api.put(
-          `http://localhost:5001/api/task/${taskId}/reset`,
+         `${import.meta.env.VITE_BACKEND_URL}/task/${taskId}/reset`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -213,10 +213,10 @@ export const UserProvider = ({ children }) => {
   const handleDeleteTask = useCallback(
     async (taskId) => {
       try {
-        await api.delete(`http://localhost:5001/api/task/${taskId}`, {
+        await api.delete(`${import.meta.env.VITE_BACKEND_URL}/task/${taskId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        await handleFetchTask(); // refresh after delete
+        await handleFetchTask();
         return { success: true };
       } catch (error) {
         console.error(
@@ -245,9 +245,9 @@ export const UserProvider = ({ children }) => {
         handleCreateTask,
         handleFetchTask,
         allTasks,
-        handleStartTask, // ✅ added
-        handlePauseTask, // ✅ added
-        handleResetTask, // ✅ added
+        handleStartTask,  
+        handlePauseTask,  
+        handleResetTask, 
         handleDeleteTask,
       }}
     >
